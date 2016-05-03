@@ -1,6 +1,6 @@
 {
   "preset": "google",
   "maximumLineLength": 120,
-  "excludeFiles": ["node_modules/**", "dots", "test/*"],
+  "excludeFiles": ["node_modules/**", "src/*", "test/*"],
   "esnext": true
 }
