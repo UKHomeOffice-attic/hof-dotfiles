@@ -5,10 +5,10 @@ Adds the following preconfigured dotfiles to the root of your project on `postin
 
 - `.dockerignore`
 - `.eslintignore`
+- `.editorconfig`
 - `.eslintrc`
 - `.gitignore`
-- `.jscsrc.json`
-- `.jshintrc`
+- `.jscsrc`
 - `.travis.yml`
 
 It won't overwrite any current dotfiles of the same name so you can safely install without destroying your own config.
