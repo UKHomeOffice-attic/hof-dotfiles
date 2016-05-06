@@ -1,0 +1,10 @@
+logs
+*.log
+.idea/
+.DS_Store
+deploy
+coverage
+public
+secrets.env
+node_modules
+apps/**/translations/**/default.json

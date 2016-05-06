@@ -1,0 +1,46 @@
+#! /usr/bin/env node
+
+const path = require('path');
+const fs = require('fs');
+const dirname = 'src/';
+const getCallSite = require('./callsite');
+
+const writeDotFiles = (filename, content) => {
+  getCallSite((callSite) => {
+    const filePath = path.resolve(callSite, filename);
+    fs.stat(filePath, (err, stats) => {
+      // file does not exist throws ENOENT
+      if (err && err.code !== 'ENOENT') {
+        throw err;
+      }
+      // do not overwrite current dotfiles
+      if (stats === undefined) {
+        fs.writeFile(filePath, content, 'utf8', (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+      }
+    });
+  });
+};
+
+fs.readdir(dirname, (err, filenames) => {
+  if (err) {
+    throw err;
+  }
+  filenames.forEach((filename) => {
+    const filePath = dirname + filename;
+    // do not read directories
+    fs.stat(filePath, (err, stats) => {
+      if (!stats.isDirectory()) {
+        fs.readFile(filePath, 'utf-8', (err, content) => {
+          if (err) {
+            throw err;
+          }
+          writeDotFiles(filename, content);
+        });
+      }
+    })
+  });
+});

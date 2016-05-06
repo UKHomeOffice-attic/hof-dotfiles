@@ -1,2 +1,16 @@
-# hof-dotfiles
-Common dotfiles used by HOF
+# HOF Dotfiles
+## Common dotfiles used by HOF in a typical build
+
+Adds the following preconfigured dotfiles to the root of your project on `postinstall`.
+
+- `.dockerignore`
+- `.eslintignore`
+- `.editorconfig`
+- `.eslintrc`
+- `.gitignore`
+- `.jscsrc`
+- `.travis.yml`
+
+It won't overwrite any current dotfiles of the same name so you can safely install without destroying your own config.
+
+If you want to contribute, please follow [the guidelines](./contributing.md)
