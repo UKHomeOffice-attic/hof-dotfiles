@@ -6,7 +6,7 @@ const fs = require('fs');
 const getCallSite = require('../../../bin/callsite');
 
 describe('hof-dotfiles', () => {
-  var execError = true;
+  let execError = true;
 
   beforeEach((done) => {
     exec('hof-dotfiles', (error) => {
