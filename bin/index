@@ -2,26 +2,35 @@
 
 const path = require('path');
 const fs = require('fs');
-const dirname = 'src/';
-const getCallSite = require('./callsite');
+const dirname = path.resolve(__dirname, '../src/');
+const target = require('./target');
+const fsStatFile = require('./fs-stat-file');
+
+const statFile = (filePath, callback) => {
+  fsStatFile(filePath, (err, stats) => {
+    // file does not exist throws ENOENT
+    if (err && err.code !== 'ENOENT') {
+      throw err;
+    }
+    // do not overwrite current dotfiles
+    if (stats === undefined) {
+      callback();
+    }
+  });
+};
+
+const statDir = (filePath, callback) => {
+  fs.stat(filePath, (err, stats) => {
+    if (!stats.isDirectory()) {
+      callback();
+    }
+  })
+};
 
 const writeDotFiles = (filename, content) => {
-  getCallSite((callSite) => {
-    const filePath = path.resolve(callSite, filename);
-    fs.stat(filePath, (err, stats) => {
-      // file does not exist throws ENOENT
-      if (err && err.code !== 'ENOENT') {
-        throw err;
-      }
-      // do not overwrite current dotfiles
-      if (stats === undefined) {
-        fs.writeFile(filePath, content, 'utf8', (err) => {
-          if (err) {
-            throw err;
-          }
-        });
-      }
-    });
+  const filePath = path.resolve(target, filename);
+  statFile(filePath, () => {
+    fs.writeFileSync(filePath, content, 'utf8');
   });
 };
 
@@ -30,17 +39,14 @@ fs.readdir(dirname, (err, filenames) => {
     throw err;
   }
   filenames.forEach((filename) => {
-    const filePath = dirname + filename;
-    // do not read directories
-    fs.stat(filePath, (err, stats) => {
-      if (!stats.isDirectory()) {
-        fs.readFile(filePath, 'utf-8', (err, content) => {
-          if (err) {
-            throw err;
-          }
-          writeDotFiles(filename, content);
-        });
-      }
+    const filePath = path.resolve(dirname, filename);
+    statDir(filePath, () => {
+      fs.readFile(filePath, 'utf-8', (err, content) => {
+        if (err) {
+          throw err;
+        }
+        writeDotFiles(filename, content);
+      });
     })
   });
 });

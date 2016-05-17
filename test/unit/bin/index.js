@@ -3,10 +3,16 @@
 const exec = require('child_process').exec;
 const path = require('path');
 const fs = require('fs');
-const getCallSite = require('../../../bin/callsite');
+const proxyquire = require('proxyquire');
+
+proxyquire('../../../bin/index', {
+  './target': path.resolve(__dirname, '../../../'),
+  './fs-stat-file': sinon.stub().callsArgWithAsync(1, null, undefined)
+});
 
 describe('hof-dotfiles', () => {
   let execError = true;
+  fs.writeFileSync = sinon.stub();
 
   beforeEach((done) => {
     exec('hof-dotfiles', (error) => {
@@ -19,20 +25,8 @@ describe('hof-dotfiles', () => {
     should.equal(execError, null);
   });
 
-  it('copies files from src to the callsites\' working directory', (done) => {
-    getCallSite((callsite) => {
-      fs.readdir(callsite, (readCallSiteError, filenames) => {
-        if (readCallSiteError) {
-          throw readCallSiteError;
-        }
-        fs.readdir(path.resolve(process.env.PWD, 'src'), (readSrcErr, srcfiles) => {
-          if (readSrcErr) {
-            throw readSrcErr;
-          }
-          filenames.should.include.members(srcfiles);
-          done();
-        });
-      });
-    });
+  it('copies files from src to the callsites\' working directory', () => {
+    fs.writeFileSync.should.have.been.called;
+    fs.writeFileSync.should.have.callCount(7);
   });
 });
