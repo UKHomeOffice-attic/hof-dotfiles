@@ -1,4 +1,4 @@
-# HOF Dotfiles
+# HOF Dotfiles [![npm version](https://badge.fury.io/js/hof-dotfiles.svg)](https://badge.fury.io/js/hof) [![Build Status](https://travis-ci.org/UKHomeOffice/hof-dotfiles.svg?branch=master)](https://travis-ci.org/UKHomeOffice/hof-dotfiles)
 ## Common dotfiles used by HOF in a typical build
 
 Adds the following preconfigured dotfiles to the root of your project on `postinstall`.
