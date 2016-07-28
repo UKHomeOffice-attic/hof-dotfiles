@@ -24,7 +24,7 @@ const statDir = (filePath, callback) => {
     if (!stats.isDirectory()) {
       callback();
     }
-  })
+  });
 };
 
 const writeDotFiles = (filename, content) => {
@@ -47,6 +47,6 @@ fs.readdir(dirname, (err, filenames) => {
         }
         writeDotFiles(filename, content);
       });
-    })
+    });
   });
 });
